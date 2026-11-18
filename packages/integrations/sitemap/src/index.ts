@@ -217,14 +217,12 @@ const createPlugin = (options?: SitemapOptions): AstroIntegration => {
 									const collect = await Promise.resolve(cb(item));
 									if (collect) {
 										collection.push(collect);
+										groupedUrlCollection.add(item.url);
 									}
 								}
 
 								// Assign the specific collection to its key
 								chunksItem[key] = collection;
-								for (const { url } of collection) {
-									groupedUrlCollection.add(url);
-								}
 							}
 							chunksItem['pages'] = urlData.filter(
 								(urlDataItem) => !groupedUrlCollection.has(urlDataItem.url),

@@ -60,3 +60,40 @@ describe('Sitemap with chunked files', () => {
 		assert.equal(pagesUrls.includes('http://example.com/two/'), true);
 	});
 });
+
+describe('Sitemap with chunked files and rewritten URLs', () => {
+	let fixture: Fixture;
+	let blogUrls: string[];
+	let pagesUrls: string[];
+
+	before(async () => {
+		fixture = await loadFixture({
+			root: './fixtures/chunks/',
+			outDir: './dist/rewritten-urls/',
+			integrations: [
+				sitemap({
+					chunks: {
+						blog: (item) => {
+							if (item.url === 'http://example.com/blog/one/') {
+								return { ...item, url: 'http://example.com/posts/one/' };
+							}
+						},
+					},
+				}),
+			],
+		});
+		await fixture.build();
+		const flatMapUrls = async (file: string) => {
+			const data = await readXML(fixture.readFile(file));
+			return data.urlset.url.map((url: { loc: string[] }) => url.loc[0]);
+		};
+		blogUrls = await flatMapUrls('sitemap-blog-0.xml');
+		pagesUrls = await flatMapUrls('sitemap-pages-0.xml');
+	});
+
+	it('excludes the original URL of a rewritten chunk item from the default sitemap', () => {
+		assert.deepEqual(blogUrls, ['http://example.com/posts/one/']);
+		assert.equal(pagesUrls.includes('http://example.com/blog/one/'), false);
+		assert.equal(pagesUrls.includes('http://example.com/blog/two/'), true);
+	});
+});
