@@ -1,5 +1,11 @@
 # astro
 
+## 7.4.14
+
+### Patch Changes
+
+- [#17891](https://github.com/withastro/astro/pull/17891) [`6fb274e`](https://github.com/withastro/astro/commit/6fb274ee5026f00df2b140a5acb3d1aacfab68af) Thanks [@ryansolid](https://github.com/ryansolid)! - Updates the Solid tsconfig preset for Solid 2.0: `astro add solid-js` now writes `jsxImportSource: "@solidjs/web"` (renderer packages own their JSX namespaces and `jsx-runtime` type entries in 2.0; `solid-js` no longer exports one)
+
 ## 7.4.13
 
 ### Patch Changes
